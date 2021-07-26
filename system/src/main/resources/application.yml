@@ -9,13 +9,12 @@ spring:
       discovery:
         server-addr: 127.0.0.1:8848
   redis:
-    database: 2
+    database: 0
     host: localhost
     port: 6379
-    password: 1qaz@WSX
     jedis:
       pool:
         max-active: 8
         max-idle: 8
         min-idle: 0
-    timeout: 100ms
+    timeout: 10000

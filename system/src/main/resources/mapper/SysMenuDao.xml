@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.love.system.menu.dao.SysMenuDao">
+
+    <resultMap type="com.love.system.menu.entity.SysMenu" id="SysMenuMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="menuName" column="menu_name" jdbcType="VARCHAR"/>
+        <result property="permissionId" column="permission_id" jdbcType="VARCHAR"/>
+        <result property="url" column="url" jdbcType="VARCHAR"/>
+        <result property="sort" column="sort" jdbcType="INTEGER"/>
+        <result property="style" column="style" jdbcType="VARCHAR"/>
+        <result property="parentId" column="parent_id" jdbcType="INTEGER"/>
+        <result property="createUser" column="create_user" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateUser" column="update_user" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SysMenuMap">
+        select id,
+               menu_name,
+               permission_id,
+               url,
+               sort,
+               style,
+               parent_id,
+               create_user,
+               create_time,
+               update_user,
+               update_time,
+               is_deleted
+        from lover.sys_menu
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="SysMenuMap">
+        select id,
+               menu_name,
+               permission_id,
+               url,
+               sort,
+               style,
+               parent_id,
+               create_user,
+               create_time,
+               update_user,
+               update_time,
+               is_deleted
+        from lover.sys_menu limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="SysMenuMap">
+        select
+        id, menu_name, permission_id, url, sort, style, parent_id, create_user, create_time, update_user, update_time,
+        is_deleted
+        from lover.sys_menu
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="menuName != null and menuName != ''">
+                and menu_name = #{menuName}
+            </if>
+            <if test="permissionId != null and permissionId != ''">
+                and permission_id = #{permissionId}
+            </if>
+            <if test="url != null and url != ''">
+                and url = #{url}
+            </if>
+            <if test="sort != null">
+                and sort = #{sort}
+            </if>
+            <if test="style != null and style != ''">
+                and style = #{style}
+            </if>
+            <if test="parentId != null">
+                and parent_id = #{parentId}
+            </if>
+            <if test="createUser != null and createUser != ''">
+                and create_user = #{createUser}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateUser != null and updateUser != ''">
+                and update_user = #{updateUser}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime}
+            </if>
+            <if test="isDeleted != null">
+                and is_deleted = #{isDeleted}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into lover.sys_menu(menu_name, permission_id, url, sort, style, parent_id, create_user, create_time,
+                                   update_user, update_time, is_deleted)
+        values (#{menuName}, #{permissionId}, #{url}, #{sort}, #{style}, #{parentId}, #{createUser}, #{createTime},
+                #{updateUser}, #{updateTime}, #{isDeleted})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into lover.sys_menu(menu_name, permission_id, url, sort, style, parent_id, create_user, create_time,
+        update_user, update_time, is_deleted)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.menuName}, #{entity.permissionId}, #{entity.url}, #{entity.sort}, #{entity.style},
+            #{entity.parentId}, #{entity.createUser}, #{entity.createTime}, #{entity.updateUser}, #{entity.updateTime},
+            #{entity.isDeleted})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into lover.sys_menu(menu_name, permission_id, url, sort, style, parent_id, create_user, create_time,
+        update_user, update_time, is_deleted)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.menuName}, #{entity.permissionId}, #{entity.url}, #{entity.sort}, #{entity.style},
+            #{entity.parentId}, #{entity.createUser}, #{entity.createTime}, #{entity.updateUser}, #{entity.updateTime},
+            #{entity.isDeleted})
+        </foreach>
+        on duplicate key update
+        menu_name = values(menu_name) , permission_id = values(permission_id) , url = values(url) , sort = values(sort)
+        , style = values(style) , parent_id = values(parent_id) , create_user = values(create_user) , create_time =
+        values(create_time) , update_user = values(update_user) , update_time = values(update_time) , is_deleted =
+        values(is_deleted)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update lover.sys_menu
+        <set>
+            <if test="menuName != null and menuName != ''">
+                menu_name = #{menuName},
+            </if>
+            <if test="permissionId != null and permissionId != ''">
+                permission_id = #{permissionId},
+            </if>
+            <if test="url != null and url != ''">
+                url = #{url},
+            </if>
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+            <if test="style != null and style != ''">
+                style = #{style},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId},
+            </if>
+            <if test="createUser != null and createUser != ''">
+                create_user = #{createUser},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateUser != null and updateUser != ''">
+                update_user = #{updateUser},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from lover.sys_menu
+        where id = #{id}
+    </delete>
+
+</mapper>
+
